@@ -3,10 +3,10 @@ import run, { type Sources } from "@cycle/run";
 import { Stream } from "xstream";
 
 const makeEventEmitDriver = <ET extends EventTarget>(target: ET) => {
-  return (sink: Stream<null>) => {
+  return <Ev extends Event>(sink: Stream<Ev>) => {
     sink.addListener({
-      next() {
-        target.dispatchEvent(new Event("reach10", { bubbles: true }));
+      next(event) {
+        target.dispatchEvent(event);
       },
     });
   };
@@ -34,7 +34,9 @@ class CCounter extends HTMLElement {
       const action$ = increment$;
       const count$ = action$.fold((acc, x) => acc + x, 0);
 
-      const emit$ = count$.filter((count) => count === 10).mapTo(null);
+      const emit$ = count$
+        .filter((count) => count === 10)
+        .mapTo(new Event("reach10", { bubbles: true }));
 
       const vdom$ = count$.map((count) => (
         <div>
