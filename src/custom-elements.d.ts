@@ -5,6 +5,7 @@ declare module "@herp-inc/snabbdom-jsx" {
         "c-counter": {
           $attrs?: { step: number };
         };
+        "x-counter": {};
       }
     }
   }
